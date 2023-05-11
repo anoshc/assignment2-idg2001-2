@@ -29,6 +29,16 @@ app = Flask(__name__)
 def render_form():
     return render_template('index.html')
 
+@app.route('/test', methods=['POST'])
+def render_test():
+    # Get the request data
+    data = request.json
+    name = data.get('name')
+
+    # Push the data to the collection
+    result = collection.insert_one({'name': name})
+    return jsonify({'message': f'Data added with id {result.inserted_id}'})
+
 
 # * POST route '/contacts' endpoint - Get the uploaded vcf-file, parses it to JSON, and pushes it to the database.
 @app.route('/contacts', methods=['POST'])
@@ -40,6 +50,7 @@ def new_contact():
         if uploaded_file.filename != '':
             uploaded_file.save(uploaded_file.filename)  # Saves the file
             vcard_parser(uploaded_file.filename)  # Parsing the file to JSON
+            print(uploaded_file)
             os.remove(uploaded_file.filename)  # Remove the vcf file locally
             return 'File read successfully and uploaded to database!'
         else:
