@@ -4,6 +4,7 @@ import json
 # import html
 import os
 import pymongo
+from flask_cors import CORS
 # import bson
 # import vobject
 
@@ -23,6 +24,8 @@ from json_to_vcard_id_parser import json_id_parser
 
 # Set the flask app
 app = Flask(__name__)
+
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 # * HOME route – Render the HTML form to the page
@@ -82,14 +85,14 @@ def getAllContacts():
 
 
 # # * GET route '/contacts/vcard' (vcard) – Parses the contacts in json back to vcf, and shows all contacts in vcf.
-# @app.route('/contacts/vcard', methods=['GET'])
-# def getVCard():
-#     # Find all in the database, and parses it from json back to vcard format.
-#     json_parser()  # Runs when we type in the route in Postman
-#     # Saves the output
-#     vcards_json = json_parser()
-#     # Return the output
-#     return jsonify(vcards_json)  # Pushes the json to the Postman output
+@app.route('/contacts/vcard', methods=['GET'])
+def getVCard():
+    # Find all in the database, and parses it from json back to vcard format.
+    json_parser()  # Runs when we type in the route in Postman
+    # Saves the output
+    vcards_json = json_parser()
+    # Return the output
+    return jsonify(vcards_json)  # Pushes the json to the Postman output
 
 
 # # * GET route '/contacts/id/vcard' (vcard) – Parses one contact (based on id) in json back to vcf, and shows that one contact in vcf.
