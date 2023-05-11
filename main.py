@@ -13,7 +13,7 @@ import database
 # import json_to_vcard_id_parser
 
 # Imported functions from files
-# from database import db
+from database import db
 from database import collection
 from bson.objectid import ObjectId
 from vcard_to_json_parser import vcard_parser
