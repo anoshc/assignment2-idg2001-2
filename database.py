@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from dotenv import dotenv_values
+import pymongo
 
 # Set the mongo uri
 config = dotenv_values('.env')
