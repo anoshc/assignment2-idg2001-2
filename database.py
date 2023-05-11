@@ -7,10 +7,12 @@ mongo_uri = config['MONGO_URI']
 client = MongoClient(mongo_uri)
 
 # Find the database and collection
-db = client['test']
-collection = db['vCard']
+db = client['vCardDB-1']
+collection = db['vCard1']
 
 # Find all documents in collection
 documents = collection.find({})
 for document in documents:
-   print(document)
+    print(document)
+
+# test
