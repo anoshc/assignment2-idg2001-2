@@ -7,7 +7,7 @@ import os
 # import vobject
 
 # Import files
-# import database
+import database
 # import vcard_to_json_parser
 # import json_to_vcard_parser
 # import json_to_vcard_id_parser
