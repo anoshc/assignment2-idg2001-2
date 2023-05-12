@@ -44,47 +44,24 @@ def render_test():
     return jsonify({'message': f'Data added with id {result.inserted_id}'})
 
 
-# * POST route '/contacts' endpoint - Get the uploaded vcf-file, parses it to JSON, and pushes it to the database.
+# * POST route '/contacts' endpoint - Get the parsed to json file from the cacheAPI, and then insert it to the mainAPI database.
 @app.route('/contacts', methods=['POST'])
 def new_contact():
-    # Retrive the uploaded file from the html form
-    if request.method == 'POST':
-        uploaded_file = request.files.get('file')
-        # If the file is NOT empty, do this:
-        if uploaded_file.filename != '':
-            uploaded_file.save(uploaded_file.filename)  # Saves the file
-            vcard_parser(uploaded_file.filename)  # Parsing the file to JSON
-            print(uploaded_file)
-            os.remove(uploaded_file.filename)  # Remove the vcf file locally
-        #     return 'File read successfully and uploaded to database!'
-        # else:
-        #     return 'Could not read file, try again.'  # In case of error
+    # Load the JSON data from the request body
+    file_data = request.json
+    print(file_data)
 
-    # Push the file to the database
-    with open('data.json') as data:
-        file_data = json.load(data)
-        if isinstance(file_data, list):
-            collection.insert_many(file_data)
-        else:
-            collection.insert_one(file_data)
-        return jsonify(file_data)
+    # Push the data to the mainAPI database
+    if isinstance(file_data, list):
+        collection.insert_many(file_data)
+    else:
+        collection.insert_one(file_data)
+
+    # Return a success message
+    return {'message': 'Data uploaded successfully'}
 
 
-# * GET route '/contacts' endpoint - Show all contacts (json)
-@app.route('/contacts', methods=['GET'])
-def getAllContacts():
-    result = collection.find()
-    return f' {(list(result))}'
-
-
-# # * GET route '/contacts/<id>' - Shows one contact based on id (json)
-# @app.route('/contacts/<id>', methods=['GET'])
-# def getContacts(id):
-#     result = collection.find_one({"_id": ObjectId(id)})
-#     return f'{result}'
-
-
-# # * GET route '/contacts/vcard' (vcard) – Parses the contacts in json back to vcf, and shows all contacts in vcf.
+# * GET route '/contacts/vcard' (vcard) – Parses the contacts in json back to vcf, and shows all contacts in vcf.
 @app.route('/contacts/vcard', methods=['GET'])
 def getVCard():
     # Find all in the database, and parses it from json back to vcard format.
@@ -95,12 +72,27 @@ def getVCard():
     return jsonify(vcards_json)  # Pushes the json to the Postman output
 
 
-# # * GET route '/contacts/id/vcard' (vcard) – Parses one contact (based on id) in json back to vcf, and shows that one contact in vcf.
-# @app.route('/contacts/<id>/vcard', methods=['GET'])
-# def getVCardId(id):
-#     json_id_parser(id)
-#     vcards_id_json = json_id_parser(id)
-#     return jsonify(vcards_id_json)
+# * GET route '/contacts' endpoint - Show all contacts (json)
+@app.route('/contacts', methods=['GET'])
+def getAllContacts():
+    result = collection.find()
+    return f' {(list(result))}'
+
+
+# * GET route '/contacts/<id>' - Shows one contact based on id (json)
+@app.route('/contacts/<id>', methods=['GET'])
+def getContacts(id):
+    result = collection.find_one({"_id": ObjectId(id)})
+    return f'{result}'
+
+
+
+# * GET route '/contacts/id/vcard' (vcard) – Parses one contact (based on id) in json back to vcf, and shows that one contact in vcf.
+@app.route('/contacts/<id>/vcard', methods=['GET'])
+def getVCardId(id):
+    json_id_parser(id)
+    vcards_id_json = json_id_parser(id)
+    return jsonify(vcards_id_json)
 
 
 # Run the app on port 3000
