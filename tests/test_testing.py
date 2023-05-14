@@ -1,7 +1,8 @@
-import pytest
+import json
 
-from src.testing import things
-def test_things():
-    assert things(2) == 6
-    assert things(0) == 0
-    assert things(-5) == -15
+def test_index(app, client):
+    res = client.get('/contacts')
+
+    assert res.status_code == 200
+    expected = {'message': 'Data uploaded successfully'}
+    assert expected == json.loads(res.get_data(as_text=True))

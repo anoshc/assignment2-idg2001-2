@@ -27,12 +27,7 @@ app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-
-# * HOME route – Render the HTML form to the page
-@app.route('/')
-def render_form():
-    return render_template('index.html')
-
+# Test route
 @app.route('/test', methods=['POST'])
 def render_test():
     # Get the request data
@@ -54,8 +49,6 @@ def new_contact():
     # Check if the key matches the hardcoded key from cacheAPI
     if key != 'post-key':
         return {'message': 'Wrong security key, try again!'}, 401
-    else:
-        return {'message': 'Correct security key!'}, 200
 
     # Load the JSON data from the request body
     file_data = request.json
@@ -68,7 +61,7 @@ def new_contact():
         collection.insert_one(file_data)
 
     # Return a success message
-    return {'message': 'Data uploaded successfully'}
+    return {'message': 'Correct security key & Data uploaded successfully!'}, 200
 
 
 # * GET route '/contacts/vcard' (vcard) – Parses the contacts in json back to vcf, and shows all contacts in vcf.
@@ -82,14 +75,16 @@ def getVCard():
     if key != 'get-key':
         return {'message': 'Wrong security key, try again!'}, 401
     else:
-        return {'message': 'Correct security key!'}, 200
+        # Find all in the database, and parses it from json back to vcard format.
+        json_parser()  # Runs when we type in the route in Postman
+        
+        # Saves the output
+        vcards_json = json_parser()
+        # Jsonify the output
+        vards = jsonify(vcards_json)
 
-    # Find all in the database, and parses it from json back to vcard format.
-    json_parser()  # Runs when we type in the route in Postman
-    # Saves the output
-    vcards_json = json_parser()
-    # Return the output
-    return jsonify(vcards_json)  # Pushes the json to the Postman output
+        # Return the output
+        return {'message': 'Correct security key!', 'vcards': vcards}, 200
 
 
 # * GET route '/contacts' endpoint - Show all contacts (json)
