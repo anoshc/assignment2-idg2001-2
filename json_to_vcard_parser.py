@@ -16,35 +16,39 @@ def json_parser():
     # Create empty vcard object list
     vcards = []
 
+    # Set the properties that need to be mapped between MongoDB and vCard formats
+    properties = {
+        'birthday': 'birthday',
+        'version': 'version',
+        'name': 'name',
+        'first name': 'fn',
+        'organisation': 'org',
+        'telefon': 'tel',
+        'email': 'email',
+        'address': 'adr',
+    }
+
     # Loop through the items in data
     for item in data:
         # Create a vCard object
         vcard = vobject.vCard()
 
         # Set the properties from the MongoDB data
-        # The get() adds a default text if the item doesn't exsist.
-        vcard.add('birthday').value = item.get('birthday', 'No Birthday')
-        vcard.add('version').value = item.get('version', 'No Version')
-        vcard.add('name').value = item.get('name', 'No Name')
-        vcard.add('fn').value = item.get('first name', 'No First Name')
-        vcard.add('org').value = item.get('organisation', 'No Organisation')
-        vcard.add('tel').value = item.get('telefon', 'No Telefon')
-        vcard.add('email').value = item.get('email', 'No Email')
-        address = item.get('address')
-        if address:
-            street = address.split(';')[2]
-            city = address.split(';')[3]
-            region = address.split(';')[4]
-            code = address.split(';')[5]
-            country = address.split(';')[6]
-            vcard.add('adr').value = vobject.vcard.Address(
-                street=street or '',
-                city=city or '',
-                region=region or '',
-                code=code or '',
-                country=country or ''
-            )
-
+        for mongo_property, vcard_property in properties.items():
+            value = item.get(mongo_property, f'No {vcard_property.capitalize()}')
+            if mongo_property == 'address' and value:
+                street, city, region, code, country = value.split(';')[2:7]
+                address = vobject.vcard.Address(
+                    street=street or '',
+                    city=city or '',
+                    region=region or '',
+                    code=code or '',
+                    country=country or ''
+                )
+                vcard.add(vcard_property).value = address
+            else:
+                vcard.add(vcard_property).value = value
+                
         # Add the vCard to the list
         vcards.append(vcard)
 
