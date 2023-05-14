@@ -1,45 +1,29 @@
-# Import modules
-from flask import Flask, render_template, request, jsonify, send_file, make_response
+# Imports
 import json
-# import html
 import os
 import pymongo
-from flask_cors import CORS
-# import bson
-# import vobject
-
-# Import files
 import database
-# import vcard_to_json_parser
-# import json_to_vcard_parser
-# import json_to_vcard_id_parser
 
-# Imported functions from files
+from flask import Flask, render_template, request, jsonify, send_file, make_response
+from bson.objectid import ObjectId
+from flask_cors import CORS
+
+# Database
 from database import db
 from database import collection
-from bson.objectid import ObjectId
-from vcard_to_json_parser import vcard_parser
+
+# Parse functions
 from json_to_vcard_parser import json_parser
 from json_to_vcard_id_parser import json_id_parser
 
 # Set the flask app
 app = Flask(__name__)
 
+# Make the app accept all requests
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Test route
-@app.route('/test', methods=['POST'])
-def render_test():
-    # Get the request data
-    data = request.json
-    name = data.get('name')
 
-    # Push the data to the collection
-    result = collection.insert_one({'name': name})
-    return jsonify({'message': f'Data added with id {result.inserted_id}'})
-
-
-# * POST route '/contacts' endpoint - Get the parsed to json file from the cacheAPI, and then insert it to the mainAPI database.
+# * POST route '/contacts' endpoint - Get the parsed file from the cacheAPI, and then insert it to the mainAPI database.
 @app.route('/contacts', methods=['POST'])
 def new_contact():
     # Security key
@@ -52,7 +36,7 @@ def new_contact():
 
     # Load the JSON data from the request body
     file_data = request.json
-    print(file_data)
+    # print(file_data)
 
     # Push the data to the mainAPI database
     if isinstance(file_data, list):
@@ -61,7 +45,7 @@ def new_contact():
         collection.insert_one(file_data)
 
     # Return a success message
-    return {'message': 'Correct security key & Data uploaded successfully!'}, 200
+    return {'message': 'Correct security key: Data uploaded successfully!'}, 200
 
 
 # * GET route '/contacts/vcard' (vcard) – Parses the contacts in json back to vcf, and shows all contacts in vcf.
@@ -80,35 +64,54 @@ def getVCard():
         
         # Saves the output
         vcards_json = json_parser()
-        # Jsonify the output
-        vcards = jsonify(vcards_json)
 
         # Return the output
-        return {'message': 'Correct security key!', 'vcards': vcards}, 200
+        return jsonify(vcards_json), 200
 
 
 # * GET route '/contacts' endpoint - Show all contacts (json)
 @app.route('/contacts', methods=['GET'])
 def getAllContacts():
-    result = collection.find()
-    return f' {(list(result))}'
+    # Security key
+    key = request.headers.get('X-API-Key')
+    #print(key)
+
+    # Check if the key matches the hardcoded key from cacheAPI
+    if key != 'get-key':
+        return {'message': 'Wrong security key, try again!'}, 401
+    else:
+        result = collection.find()
+        return f' {(list(result))}'
 
 
 # * GET route '/contacts/<id>' - Shows one contact based on id (json)
 @app.route('/contacts/<id>', methods=['GET'])
 def getContacts(id):
-    result = collection.find_one({"_id": ObjectId(id)})
-    return f'{result}'
+    # Security key
+    key = request.headers.get('X-API-Key')
+    
+    # Check if the key matches the hardcoded key from cacheAPI
+    if key != 'get-id-key':
+        return {'message': 'Wrong security key, try again!'}, 401
+    else:
+        result = collection.find_one({"_id": ObjectId(id)})
+        return f'{result}'
 
 
-
-# * GET route '/contacts/id/vcard' (vcard) – Parses one contact (based on id) in json back to vcf, and shows that one contact in vcf.
+# * GET route '/contacts/id/vcard' (vcard) – Parses one contact (based on id) in json back to vcf, and returns the parsed output.
 @app.route('/contacts/<id>/vcard', methods=['GET'])
 def getVCardId(id):
-    json_id_parser(id)
-    vcards_id_json = json_id_parser(id)
-    return jsonify(vcards_id_json)
+    # Security key
+    key = request.headers.get('X-API-Key')
+    
+    # Check if the key matches the hardcoded key from cacheAPI
+    if key != 'get-id-key':
+        return {'message': 'Wrong security key, try again!'}, 401
+    else:
+        json_id_parser(id)
+        vcards_id_json = json_id_parser(id)
+        return jsonify(vcards_id_json)
 
 
-# Run the app on port 3000
+# Run the mainAPI app on port 3000
 app.run(port=3000)
