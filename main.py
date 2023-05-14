@@ -47,6 +47,16 @@ def render_test():
 # * POST route '/contacts' endpoint - Get the parsed to json file from the cacheAPI, and then insert it to the mainAPI database.
 @app.route('/contacts', methods=['POST'])
 def new_contact():
+    # Security key
+    key = request.headers.get('X-API-Key')
+    #print(key)
+
+    # Check if the key matches the hardcoded key from cacheAPI
+    if key != 'post-key':
+        return {'message': 'Wrong security key, try again!'}, 401
+    else:
+        return {'message': 'Correct security key!'}, 200
+
     # Load the JSON data from the request body
     file_data = request.json
     print(file_data)
@@ -64,6 +74,16 @@ def new_contact():
 # * GET route '/contacts/vcard' (vcard) – Parses the contacts in json back to vcf, and shows all contacts in vcf.
 @app.route('/contacts/vcard', methods=['GET'])
 def getVCard():
+    # Security key
+    key = request.headers.get('X-API-Key')
+    #print(key)
+
+    # Check if the key matches the hardcoded key from cacheAPI
+    if key != 'get-key':
+        return {'message': 'Wrong security key, try again!'}, 401
+    else:
+        return {'message': 'Correct security key!'}, 200
+
     # Find all in the database, and parses it from json back to vcard format.
     json_parser()  # Runs when we type in the route in Postman
     # Saves the output
