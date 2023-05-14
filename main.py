@@ -81,7 +81,7 @@ def getVCard():
         # Saves the output
         vcards_json = json_parser()
         # Jsonify the output
-        vards = jsonify(vcards_json)
+        vcards = jsonify(vcards_json)
 
         # Return the output
         return {'message': 'Correct security key!', 'vcards': vcards}, 200
