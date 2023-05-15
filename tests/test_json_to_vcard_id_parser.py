@@ -5,7 +5,7 @@ import vobject
 from assignment2.json_to_vcard_id_parser import get_address_fields, set_address_fields
 
 
-# Testing the function 'get_address_fields' and check if it splits on the semicolons. 
+# Testing the function 'get_address_fields' and check if it splits on the semicolons.
 def test_get_address_fields():
     address = ";;One Microsoft Way;Redmond;WA;98052-6399;USA"
 
