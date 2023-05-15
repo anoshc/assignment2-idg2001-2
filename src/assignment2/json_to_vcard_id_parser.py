@@ -1,4 +1,8 @@
 # Denne parseren er inspirert fra IDG2001 Cloud Technologies Lab 3
+def serialize_data:
+    # Serialize the vCards to a list of strings in
+    vcard_str = vcard.serialize()
+
 
 # * This function finds a collection object based on id, and parses it from json to vcard
 def json_id_parser(id):
@@ -37,8 +41,7 @@ def json_id_parser(id):
             street=street, city=city, region=region, code=code, country=country
         )
 
-    # Serialize the vCards to a list of strings in
-    vcard_str = vcard.serialize()
+    serialize_data()
 
     # Combine the vCard strings into a single JSON string
     # Source: https://docs.python.org/3/library/json.html
