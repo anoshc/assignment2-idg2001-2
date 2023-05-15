@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 from flask_cors import CORS
 
 # Database
-from database import db
+
 from database import collection
 
 # Parse functions
