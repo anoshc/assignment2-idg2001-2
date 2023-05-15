@@ -2,6 +2,8 @@
 def get_address_fields(address):
     return address.split(';')[2:]
 
+def set_address_fields(address_fields):
+    return address_fields + ['']*(5 - len(address_fields))
 
 # * This function finds a collection object based on id, and parses it from json to vcard
 def json_id_parser(id):
@@ -36,7 +38,7 @@ def json_id_parser(id):
     address = data.get('address')
     if address:
         address_fields = get_address_fields(address)
-        street, city, region, code, country = address_fields + ['']*(5 - len(address_fields))
+        street, city, region, code, country = set_address_fields(address_fields)
         vcard.add('adr').value = vobject.vcard.Address(
             street=street, city=city, region=region, code=code, country=country
         )
