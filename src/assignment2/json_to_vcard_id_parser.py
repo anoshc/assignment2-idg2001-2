@@ -2,8 +2,10 @@
 def get_address_fields(address):
     return address.split(';')[2:]
 
+
 def set_address_fields(address_fields):
     return address_fields + ['']*(5 - len(address_fields))
+
 
 # * This function finds a collection object based on id, and parses it from json to vcard
 def json_id_parser(id):

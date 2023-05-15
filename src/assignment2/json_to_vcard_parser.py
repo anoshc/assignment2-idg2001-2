@@ -3,16 +3,17 @@
 def value_split(value):
     return value.split(';')[2:7]
 
+
 def create_vcard_object(street, city, region, code, country):
     import vobject
 
     address = vobject.vcard.Address(
-                    street=street or '',
-                    city=city or '',
-                    region=region or '',
-                    code=code or '',
-                    country=country or ''
-                )
+        street=street or '',
+        city=city or '',
+        region=region or '',
+        code=code or '',
+        country=country or ''
+    )
 
     return address
 
