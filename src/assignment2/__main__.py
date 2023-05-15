@@ -1,10 +1,4 @@
-# Imports
-import json
-import os
-import pymongo
-
-
-from flask import Flask, render_template, request, jsonify, send_file, make_response
+from flask import Flask, request, jsonify
 from bson.objectid import ObjectId
 from flask_cors import CORS
 
@@ -28,7 +22,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 def new_contact():
     # Security key
     key = request.headers.get('X-API-Key')
-    #print(key)
+    # print(key)
 
     # Check if the key matches the hardcoded key from cacheAPI
     if key != 'post-key':
@@ -53,7 +47,7 @@ def new_contact():
 def getVCard():
     # Security key
     key = request.headers.get('X-API-Key')
-    #print(key)
+    # print(key)
 
     # Check if the key matches the hardcoded key from cacheAPI
     if key != 'get-key':
@@ -61,7 +55,7 @@ def getVCard():
     else:
         # Find all in the database, and parses it from json back to vcard format.
         json_parser()  # Runs when we type in the route in Postman
-        
+
         # Saves the output
         vcards_json = json_parser()
 
@@ -74,7 +68,7 @@ def getVCard():
 def getAllContacts():
     # Security key
     key = request.headers.get('X-API-Key')
-    #print(key)
+    # print(key)
 
     # Check if the key matches the hardcoded key from cacheAPI
     if key != 'get-key':
@@ -89,7 +83,7 @@ def getAllContacts():
 def getContacts(id):
     # Security key
     key = request.headers.get('X-API-Key')
-    
+
     # Check if the key matches the hardcoded key from cacheAPI
     if key != 'get-id-key':
         return {'message': 'Wrong security key, try again!'}, 401
@@ -103,7 +97,7 @@ def getContacts(id):
 def getVCardId(id):
     # Security key
     key = request.headers.get('X-API-Key')
-    
+
     # Check if the key matches the hardcoded key from cacheAPI
     if key != 'get-id-key':
         return {'message': 'Wrong security key, try again!'}, 401

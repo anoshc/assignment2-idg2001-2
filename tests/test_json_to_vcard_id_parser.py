@@ -1,9 +1,4 @@
-import json
-
 from assignment2.json_to_vcard_id_parser import get_address_fields
-
-import vobject
-
 
 # def test_data_test():
 #     setup_data = 4
@@ -14,7 +9,7 @@ import vobject
 
 def test_get_address_fields():
     address = ";;One Microsoft Way;Redmond;WA;98052-6399;USA"
-    
+
     result = get_address_fields(address)
 
     # Assert the correctness of the serialization
