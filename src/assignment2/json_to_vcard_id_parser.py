@@ -2,10 +2,8 @@
 def get_address_fields(address):
     return address.split(';')[2:]
 
-
 def set_address_fields(address_fields):
     return address_fields + ['']*(5 - len(address_fields))
-
 
 # * This function finds a collection object based on id, and parses it from json to vcard
 def json_id_parser(id):
@@ -16,11 +14,11 @@ def json_id_parser(id):
     from bson.objectid import ObjectId
 
     # Load the JSON object from the MongoDB colelction
-    data = collection.find_one({"_id": ObjectId(id)})  
-    
+    data = collection.find_one({"_id": ObjectId(id)})
+
     # Create a vCard object
     vcard = vobject.vCard()
-    
+
     # Set the properties from the MongoDB data
     vcard_properties = {
         'birthday': 'birthday',

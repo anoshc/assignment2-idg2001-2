@@ -48,7 +48,7 @@ def json_parser():
                 vcard.add(vcard_property).value = address
             else:
                 vcard.add(vcard_property).value = value
-                
+
         # Add the vCard to the list
         vcards.append(vcard)
 
