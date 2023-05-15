@@ -10,11 +10,11 @@ from flask_cors import CORS
 
 # Database
 
-from database import collection
+from assignment2.database import collection
 
 # Parse functions
-from json_to_vcard_parser import json_parser
-from json_to_vcard_id_parser import json_id_parser
+from assignment2.json_to_vcard_parser import json_parser
+from assignment2.json_to_vcard_id_parser import json_id_parser
 
 # Set the flask app
 app = Flask(__name__)
