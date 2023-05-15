@@ -1,5 +1,22 @@
 # Denne parseren er inspirert fra IDG2001 Cloud Technologies Lab 3
 
+def value_split(value):
+    return value.split(';')[2:7]
+
+def create_vcard_object(street, city, region, code, country):
+    import vobject
+
+    address = vobject.vcard.Address(
+                    street=street or '',
+                    city=city or '',
+                    region=region or '',
+                    code=code or '',
+                    country=country or ''
+                )
+
+    return address
+
+
 # * This function finds all collections objects, and parses it from json to vcard
 def json_parser():
 
@@ -37,14 +54,8 @@ def json_parser():
         for mongo_property, vcard_property in properties.items():
             value = item.get(mongo_property, f'No {vcard_property.capitalize()}')
             if mongo_property == 'address' and value:
-                street, city, region, code, country = value.split(';')[2:7]
-                address = vobject.vcard.Address(
-                    street=street or '',
-                    city=city or '',
-                    region=region or '',
-                    code=code or '',
-                    country=country or ''
-                )
+                street, city, region, code, country = value_split(value)
+                address = create_vcard_object(street, city, region, code, country)
                 vcard.add(vcard_property).value = address
             else:
                 vcard.add(vcard_property).value = value
