@@ -22,7 +22,7 @@ def json_parser():
 
     import vobject
     import json
-    from database import collection
+    from assingment2.database import collection
 
     # Load the JSON object from the MongoDB collection
     data = list(collection.find())
