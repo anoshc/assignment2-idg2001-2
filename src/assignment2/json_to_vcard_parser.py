@@ -14,7 +14,6 @@ def create_vcard_object(street, city, region, code, country):
         code=code or '',
         country=country or ''
     )
-
     return address
 
 
