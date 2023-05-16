@@ -15,6 +15,8 @@ def test_get_address_fields():
     expected_result = ["One Microsoft Way", "Redmond", "WA", "98052-6399", "USA"]
     assert result == expected_result
 
+
+# Testing the function 'set_address_fields' to check if it set to empty if items' missing.
 def test_set_address_fields():
     address_fields = ["One Microsoft Way", "Redmond"]
 

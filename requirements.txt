@@ -11,3 +11,4 @@ mypy==1.2.0
 flake8==6.0.0
 tox==4.4.12
 setuptools==67.6.1
+vobject==0.9.6.1
