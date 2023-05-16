@@ -19,15 +19,13 @@ def test_create_address_vobject():
     from vobject.vcard import Address
 
     expected_address = vobject.vcard.Address(
-        street = "One Microsoft Way",
-        city = "Redmond",
-        region = "WA",
-        code = "98052-6399",
-        country = "USA"
+        street="One Microsoft Way",
+        city="Redmond",
+        region="WA",
+        code="98052-6399",
+        country="USA"
     )
 
     expected_result = create_vcard_object("One Microsoft Way", "Redmond", "WA", "98052-6399", "USA")
 
     assert expected_address == expected_result
-
-
